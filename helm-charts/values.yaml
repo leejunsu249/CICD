@@ -14,7 +14,7 @@ image:
 container:
   port: 8080
 
-imagePullSecrets: []
+imagePullSecrets: [{ name: regcred }]
 nameOverride: ""
 fullnameOverride: ""
 
