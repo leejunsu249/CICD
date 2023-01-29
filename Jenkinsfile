@@ -57,7 +57,14 @@ podTemplate(label: 'docker-build',
 
     stage('Image Scan') {
       container('trivy') {
-          sh 'trivy --severity CRITICAL,HIGH --format json ${registry}/test:${imageTag}'
+          
+          sh """
+             #!/bin/bash
+
+             IMAGE=${registry}/test:${imageTag}
+
+             trivy image --severity CRITICAL,HIGH --format json \${IMAGE}
+             """
       }
     }
 
