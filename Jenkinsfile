@@ -51,7 +51,13 @@ podTemplate(label: 'docker-build',
 
                 podman build -t \${IMAGE} --build-arg COLOR=${imageTag} .
                 """
-             withCredentials([usernamePassword(credentialsId: podmankey, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+        }
+      }
+    }
+
+    stage('Push image') {
+      container(name:'podman', shell:'/bin/bash') {
+        withCredentials([usernamePassword(credentialsId: podmankey, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                 sh """
                     #!/bin/bash
 
@@ -62,27 +68,9 @@ podTemplate(label: 'docker-build',
 
                     podman push \${IMAGE} --tls-verify=false
                     """
-          }
         }
       }
     }
-
-    // stage('Push image') {
-    //   container(name:'podman', shell:'/bin/bash') {
-    //     withCredentials([usernamePassword(credentialsId: podmankey, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-    //             sh """
-    //                 #!/bin/bash
-
-    //                 # Construct Image Name
-    //                 IMAGE=${registry}/test:${imageTag}
-
-    //                 podman login -u ${USERNAME} -p ${PASSWORD} ${registry} --tls-verify=false
-
-    //                 podman push \${IMAGE} --tls-verify=false
-    //                 """
-    //     }
-    //   }
-    // }
 
     stage('Image Scan') {
       container('trivy') {
