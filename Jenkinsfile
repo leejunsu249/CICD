@@ -10,7 +10,7 @@ podTemplate(label: 'docker-build',
   containers: [
     containerTemplate(
       name: 'podman',
-      image: ${registry}'/c-podman',
+      image: '10.60.200.120:5000/c-podman',
       command: 'cat',
       ttyEnabled: true
     ),
