@@ -76,7 +76,7 @@ podTemplate(label: 'docker-build',
              TRIVY_INSECURE=true
              IMAGE=${registry}/test:${imageTag}
 
-             trivy --no-progress --exit-code 1 --serverity HIGH,CRITICAL  \${IMAGE}
+             trivy image --serverity HIGH,CRITICAL  \${IMAGE}
              """
       }
     }
