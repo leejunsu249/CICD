@@ -12,7 +12,8 @@ podTemplate(label: 'docker-build',
       name: 'podman',
       image: '10.60.200.120:5000/c-podman',
       command: 'cat',
-      ttyEnabled: true
+      ttyEnabled: true,
+      privileged: true
     ),
     containerTemplate(
       name: 'argo',
