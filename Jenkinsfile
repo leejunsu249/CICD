@@ -20,17 +20,18 @@ podTemplate(label: 'docker-build',
       command: 'cat',
       ttyEnabled: true
     ),
-    containerTemplate(
-      name: 'trivy',
-      image: 'aquasec/trivy',
-      command: 'cat',
-      ttyEnabled: true
-    ),
+    // containerTemplate(
+    //   name: 'trivy',
+    //   image: 'aquasec/trivy',
+    //   command: 'cat',
+    //   ttyEnabled: true
+    // ),
   ],
-  volumes: [
-    hostPathVolume(mountPath: '/var/run/containerd.sock', hostPath: '/var/run/containerd/containerd.sock'),
-  ]
-) {
+  // volumes: [
+  //   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  // ]
+) 
+{
   node('docker-build') {
     stage('Checkout') {
       container('docker') {
