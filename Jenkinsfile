@@ -27,9 +27,9 @@ podTemplate(label: 'docker-build',
     //   ttyEnabled: true
     // ),
   ],
-  // volumes: [
-  //   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  // ]
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ]
 ) 
 {
   node('docker-build') {
