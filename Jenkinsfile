@@ -82,36 +82,20 @@ podTemplate(label: 'docker-build',
 
     stage('Deploy') {
       container('argo') {
-        checkout(
-                    [
-                        $class: 'GitSCM',
-                        extensions: scm.extensions,
-                        branches: [
-                            [
-                                name: "*/${branch}"
-                            ]
-                        ],
-                        userRemoteConfigs: [
-                            [
-                                url: "${githubURL}",
-                                credentialsId: "${githubKey}",
-                            ]
-                        ]
-                    ]
-                )
-        sshagent(credentials: ["${githubKey}"]) {
-          sh("""
-                        #!/usr/bin/env bash
-                        set +x
-                        export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
-                        git config --global user.email ${githubEmail}
-                        git checkout ${branch}
-                        cd  helm-charts
-                        sed -i 's/tag:.*/tag: ${imageTag}/g' values.yaml
-                        git commit -a -m ${commitMsg}
-                        git remote set-url origin ${githubURL}
-                        git push -u origin master
-                    """)
+        checkout scm
+        withCredentials([usernamePassword(credentialsId: github, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]){
+                sh """
+                    #!/bin/bash
+
+                    git config --global user.email ${githubEmail}
+                    git config --global user.name leejunsu249
+                    git checkout ${branch}
+                    cd  helm-charts
+                    sed -i 's/tag:.*/tag: ${imageTag}/g' values.yaml
+                    git commit -a -m ${commitMsg}
+                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/leejunsu249/CICD.git HEAD:master
+                    """
+          }
         }
       }
     }
