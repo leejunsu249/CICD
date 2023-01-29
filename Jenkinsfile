@@ -93,7 +93,7 @@ podTemplate(label: 'docker-build',
                         ],
                         userRemoteConfigs: [
                             [
-                                url: "${githubSSHURL}",
+                                url: "${githubURL}",
                                 credentialsId: "${githubKey}",
                             ]
                         ]
@@ -109,7 +109,7 @@ podTemplate(label: 'docker-build',
                         cd  helm-charts
                         sed -i 's/tag:.*/tag: ${imageTag}/g' values.yaml
                         git commit -a -m ${commitMsg}
-                        git remote set-url origin ${githubSSHURL}
+                        git remote set-url origin ${githubURL}
                         git push -u origin master
                     """)
         }
