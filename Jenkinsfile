@@ -67,12 +67,11 @@ podTemplate(label: 'docker-build',
     }
 
     stage('Image Scan') {
-      container('podman') {
+      container(name: 'podman', shell:'/bin/bash') {
           
           sh """
              #!/bin/bash
-             wget https://github.com/aquasecurity/trivy/releases/download/v0.36.1/trivy_0.36.1_Linux-64bit.deb
-             dpkg -i trivy_0.36.1_Linux-64bit.deb
+             rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.36.1/trivy_0.36.1_Linux-64bit.rpm
 
              TRIVY_INSECURE=true
              IMAGE=${registry}/test:${imageTag}
