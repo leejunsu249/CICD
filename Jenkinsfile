@@ -76,7 +76,7 @@ podTemplate(label: 'docker-build',
              IMAGE=test:${imageTag}
              SERVER=https://${registry}
 
-             trivy image --serverity HIGH,CRITICAL --insecure=true --format json --server \$SERVER \${IMAGE}
+             trivy image --severity HIGH,CRITICAL --insecure=true --format json --server \$SERVER \${IMAGE}
              """
       }
     }
