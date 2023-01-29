@@ -55,19 +55,6 @@ podTemplate(label: 'docker-build',
       }
     }
 
-    stage('Image Scan') {
-      container('trivy') {
-          
-          sh """
-             #!/bin/bash
-
-             IMAGE=${registry}/test:${imageTag}
-
-             trivy image --severity CRITICAL,HIGH --format json \${IMAGE}
-             """
-      }
-    }
-
     stage('Push image') {
       container(name:'podman', shell:'/bin/bash') {
         withCredentials([usernamePassword(credentialsId: podman-key,
@@ -84,6 +71,20 @@ podTemplate(label: 'docker-build',
                     podman push \${IMAGE} --tls-verify=false
                     """
         }
+      }
+    }
+
+    stage('Image Scan') {
+      container('trivy') {
+          
+          sh """
+             #!/bin/bash
+
+             TRIVY_INSECURE=true
+             IMAGE=${registry}/test:${imageTag}
+
+             trivy image --severity CRITICAL,HIGH --format json \${IMAGE}
+             """
       }
     }
 
