@@ -73,10 +73,9 @@ podTemplate(label: 'docker-build',
              #!/bin/bash
              rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.36.1/trivy_0.36.1_Linux-64bit.rpm
 
-             IMAGE=test:${imageTag}
-             SERVER=https://${registry}
+             IMAGE=${registry}/test:${imageTag}
 
-             trivy image --severity HIGH,CRITICAL --insecure=true --format json --server \$SERVER \${IMAGE}
+             trivy image --severity HIGH,CRITICAL --insecure=true --format json \${IMAGE}
              """
       }
     }
