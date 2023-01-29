@@ -6,11 +6,13 @@ def githubSSHURL = 'git@github.com:leejunsu249/CICD.git'
 def imageTag = 'blue'
 def registry = '10.60.200.120:5000'
 
-podTemplate(label: 'docker-build',
+podTemplate(label: 'docker-build', envVars: [
+        envVar(key: 'REGISTRY', value: registry)
+    ],
   containers: [
     containerTemplate(
       name: 'podman',
-      image: '${registry}/c-podman',
+      image: "${REGISTRY}/c-podman",
       command: 'cat',
       ttyEnabled: true
     ),
