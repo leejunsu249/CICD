@@ -9,7 +9,7 @@ RUN make
 #COPY *.js ./
 #COPY *.ico ./
 #COPY *.css ./
-mv  /go/src/app/rollouts-demo /rollouts-demo
+RUN mv  /go/src/app/rollouts-demo /rollouts-demo
 
 ARG COLOR
 ENV COLOR=${COLOR}
