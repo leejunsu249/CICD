@@ -9,8 +9,8 @@ def registry = '10.60.200.120:5000'
 podTemplate(label: 'docker-build',
   containers: [
     containerTemplate(
-      name: 'docker',
-      image: 'docker',
+      name: 'podman',
+      image: '${registry}/c-podman',
       command: 'cat',
       ttyEnabled: true
     ),
@@ -20,29 +20,36 @@ podTemplate(label: 'docker-build',
       command: 'cat',
       ttyEnabled: true
     ),
-    // containerTemplate(
-    //   name: 'trivy',
-    //   image: 'aquasec/trivy',
-    //   command: 'cat',
-    //   ttyEnabled: true
-    // ),
+    containerTemplate(
+      name: 'trivy',
+      image: 'aquasec/trivy',
+      command: 'cat',
+      ttyEnabled: true
+    ),
   ],
-  volumes: [
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]
+  // volumes: [
+  //   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  // ]
 ) 
 {
   node('docker-build') {
     stage('Checkout') {
-      container('docker') {
+      container('podman') {
         checkout scm
       }
     }
 
-    stage('Docker Build') {
+    stage('Podman Build') {
       dir(path: 'container') {
-        container('docker') {
-          image = docker.build("${registry}/test:${imageTag}", "--build-arg COLOR=${imageTag} .")
+        container(name:'podman', shell:'/bin/bash') {
+             sh """
+                #!/bin/bash
+
+                # Construct Image Name
+                IMAGE=${registry}/test:${imageTag}
+
+                podman build -t \${IMAGE} --build-arg COLOR=${imageTag} .
+                """
         }
       }
     }
@@ -54,9 +61,20 @@ podTemplate(label: 'docker-build',
     }
 
     stage('Push image') {
-      container('docker') {
-        docker.withRegistry("https://${registry}", 'podman-key') {
-          image.push()
+      container(name:'podman', shell:'/bin/bash') {
+        withCredentials([usernamePassword(credentialsId: podman-key,
+                                               usernameVariable: 'USERNAME',
+                                               passwordVariable: 'PASSWORD')]) {
+                sh """
+                    #!/bin/bash
+
+                    # Construct Image Name
+                    IMAGE=${registry}/test:${imageTag}
+
+                    podman login -u ${USERNAME} -p ${PASSWORD} ${registry} --tls-verify=false
+
+                    podman push \${IMAGE} --tls-verify=false
+                    """
         }
       }
     }
