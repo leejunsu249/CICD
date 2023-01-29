@@ -57,7 +57,7 @@ podTemplate(label: 'docker-build',
 
     stage('Push image') {
       container(name:'podman', shell:'/bin/bash') {
-        withCredentials([usernamePassword(credentialsId: podman-key,
+        withCredentials([usernamePassword(credentialsId: podmankey,
                                                usernameVariable: 'USERNAME',
                                                passwordVariable: 'PASSWORD')]) {
                 sh """
