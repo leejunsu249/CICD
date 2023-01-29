@@ -1,15 +1,15 @@
-FROM golang:1.19.5 AS build
+FROM golang:1.19.5
 WORKDIR /go/src/app
 COPY . .
 RUN make
 
-FROM scratch
-COPY *.html ./
-COPY *.png ./
-COPY *.js ./
-COPY *.ico ./
-COPY *.css ./
-COPY --from=build /go/src/app/rollouts-demo /rollouts-demo
+#FROM scratch
+#COPY *.html ./
+#COPY *.png ./
+#COPY *.js ./
+#COPY *.ico ./
+#COPY *.css ./
+mv  /go/src/app/rollouts-demo /rollouts-demo
 
 ARG COLOR
 ENV COLOR=${COLOR}
