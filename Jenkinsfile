@@ -21,13 +21,6 @@ podTemplate(label: 'docker-build',
       command: 'cat',
       ttyEnabled: true
     ),
-    containerTemplate(
-      name: 'trivy',
-      image: 'aquasec/trivy',
-      command: 'cat',
-      ttyEnabled: true
-    ),
-  ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/containerd/containerd.sock', hostPath: '/var/run/containerd/containerd.sock'),
   ]
@@ -73,15 +66,17 @@ podTemplate(label: 'docker-build',
     }
 
     stage('Image Scan') {
-      container('trivy') {
+      container('podman') {
           
           sh """
              #!/bin/bash
+             wget https://github.com/aquasecurity/trivy/releases/download/v0.36.1/trivy_0.36.1_Linux-64bit.deb
+             dpkg -i trivy_0.36.1_Linux-64bit.deb
 
              TRIVY_INSECURE=true
              IMAGE=${registry}/test:${imageTag}
 
-             trivy image --severity CRITICAL,HIGH --format json \${IMAGE}
+             trivy --no-progress --exit-code 1 --serverity HIGH,CRITICAL  \${IMAGE}
              """
       }
     }
