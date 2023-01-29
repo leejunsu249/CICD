@@ -21,6 +21,7 @@ podTemplate(label: 'docker-build',
       command: 'cat',
       ttyEnabled: true
     ),
+  ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/containerd/containerd.sock', hostPath: '/var/run/containerd/containerd.sock'),
   ]
