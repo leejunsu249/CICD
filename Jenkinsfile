@@ -95,9 +95,9 @@ podTemplate(label: 'docker-build',
                     git commit -a -m ${commitMsg}
                     git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/leejunsu249/CICD.git HEAD:master
                     """
-          }
         }
       }
     }
   }
 }
+
