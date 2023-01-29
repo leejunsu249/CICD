@@ -2,7 +2,7 @@ def branch = 'master'
 def commitMsg = 'CICD-pipeline'
 def githubEmail = '75758585@naver.com'
 def githubKey = 'github-key'
-def githubSSHURL = 'git@github.com:leejunsu249/CICD.git'
+def githubURL = 'https://github.com/leejunsu249/CICD.git'
 def imageTag = 'blue'
 def registry = '10.60.200.120:5000'
 
