@@ -84,10 +84,7 @@ podTemplate(label: 'docker-build',
       sshagent (credentials: ['ssh-agent']) {
                 sh """
                     ssh -o StrictHostKeyChecking=no ${target_host} '
-                    IMAGE=${registry}/test:${imageTag}
-
-                    cosign sign --insecure-skip-verify --allow-insecure-registry  --key k8s://image-sign/cosignkey \${IMAGE}
-                    '
+                    cosign sign --insecure-skip-verify --allow-insecure-registry  --key k8s://image-sign/cosignkey ${registry}/test:${imageTag}'
                 """
       }
     }
