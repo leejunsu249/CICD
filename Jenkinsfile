@@ -5,6 +5,7 @@ def githubKey = 'github-key'
 def githubURL = 'https://github.com/leejunsu249/CICD.git'
 def imageTag = 'red'
 def registry = '10.60.200.120:5000'
+def target_host = "root@10.60.200.120"
 
 podTemplate(label: 'docker-build',
   containers: [
@@ -80,12 +81,9 @@ podTemplate(label: 'docker-build',
     }
 
     stage('Sign Image') {
-      environment {
-        TARGET_HOST = "root@10.60.200.120"
-      }
       sshagent (credentials: ['ssh-agent']) {
                 sh """
-                    ssh -o StrictHostKeyChecking=no \${TARGET_HOST}
+                    ssh -o StrictHostKeyChecking=no ${target_host}
                     IMAGE=${registry}/test:${imageTag}
 
                     "cosign sign --insecure-skip-verify --allow-insecure-registry  --key k8s://image-sign/cosignkey \${IMAGE}
