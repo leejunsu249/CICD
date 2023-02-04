@@ -90,7 +90,6 @@ podTemplate(label: 'docker-build',
             
             def IMAGE=${registry}/test:${imageTag}
             sshCommand remote: remote, command: "cosign sign --insecure-skip-verify --allow-insecure-registry  --key k8s://image-sign/cosignkey \${IMAGE}"
-        }
       }
     }
 
