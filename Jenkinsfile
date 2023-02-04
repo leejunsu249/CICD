@@ -90,7 +90,8 @@ podTemplate(label: 'docker-build',
               cosign version
               cat ./cosign-key
               IMAGE=${registry}/test:${imageTag}
-              ${COSIGN_PW} | cosign sign --insecure-skip-verify --allow-insecure-registry --key ./cosign-key \${IMAGE}
+
+              \${COSIGN_PW} | cosign sign --insecure-skip-verify --allow-insecure-registry --key ./cosign-key \${IMAGE}
              """
         }
       }
