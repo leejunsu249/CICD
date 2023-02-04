@@ -81,7 +81,7 @@ podTemplate(label: 'docker-build',
 
     stage('Sign Image') {
       container(name: 'podman', shell:'/bin/bash') {
-          withCredentials([file(credentialsId: cosign-private-key, variable: 'COSIGN'),
+          withCredentials([file(credentialsId: cosign_private_key, variable: 'COSIGN'),
                            string(credentialsId: 'cosign_password', variable: 'COSIGN_PW')]){
             
             writeFile file: './cosign-key', text: readFile(COSIGN)
