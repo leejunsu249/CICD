@@ -81,14 +81,15 @@ podTemplate(label: 'docker-build',
 
     stage('Sign Image') {
       container(name: 'podman', shell:'/bin/bash') {
-          withCredentials([file(credentialsId: 'cosign-key', variable: 'COSIGN')]){
+          withCredentials([file(credentialsId: 'cosign-key', variable: 'COSIGN'),
+                           string(credentialsId: 'cosign_password', variable: 'COSIGN_PW')]){
 
             sh """
              #!/bin/bash
               cosign version
               
               IMAGE=${registry}/test:${imageTag}
-              cosign sign --key \${COSIGN} \${IMAGE}
+              \${COSIGN_PW} | cosign sign --key \${COSIGN} \${IMAGE}
              """
         }
       }
