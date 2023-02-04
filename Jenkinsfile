@@ -80,22 +80,16 @@ podTemplate(label: 'docker-build',
     }
 
     stage('Sign Image') {
-      environment { 
-        COSIGN_PASSWORD=credentials('cosign_password')
-      }
-      container(name: 'podman', shell:'/bin/bash') {
-          withCredentials([file(credentialsId: 'cosign_private_key', variable: 'COSIGN')]){
+      withCredentials([usernamePassword(credentialsId: ssh, usernameVariable: 'SSH_USERNAME', passwordVariable: 'SSH_PASSWORD')]){
+            def remote = [:]
+            remote.name = 'root'
+            remote.host = 'acc-master'
+            remote.user = ${SSH_USERNAME}
+            remote.password = ${SSH_PASSWORD}
+            remote.allowAnyHosts = true
             
-            sh """
-             #!/bin/bash
-              cosign version
-
-              cat \${COSIGN}
-
-              IMAGE=${registry}/test:${imageTag}
-
-              cosign sign --insecure-skip-verify --allow-insecure-registry --key \${COSIGN} \${IMAGE}
-             """
+            IMAGE=${registry}/test:${imageTag}
+            sshCommand remote: remote, command: "cosign sign --insecure-skip-verify --allow-insecure-registry  --key k8s://image-sign/cosignkey \${IMAGE}"
         }
       }
     }
