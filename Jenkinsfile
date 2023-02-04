@@ -82,20 +82,19 @@ podTemplate(label: 'docker-build',
     stage('Sign Image') {
       environment { 
         COSIGN_PASSWORD=credentials('cosign_password')
+        COSIGN_PRIVATE_KEY=credentials('cosign_private_key')
       }
       container(name: 'podman', shell:'/bin/bash') {
-          withCredentials([file(credentialsId: cosign_private_key, variable: 'COSIGN')]){
-            
-            writeFile file: './cosign-key', text: readFile(COSIGN)
+
             sh """
              #!/bin/bash
               cosign version
 
               IMAGE=${registry}/test:${imageTag}
 
-              cosign sign --insecure-skip-verify --allow-insecure-registry --key ./cosign-key \${IMAGE}
+              cosign sign --insecure-skip-verify --allow-insecure-registry --key $COSIGN_PRIVATE_KEY \${IMAGE}
              """
-        }
+        
       }
     }
 
