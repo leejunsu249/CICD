@@ -71,7 +71,7 @@ podTemplate(label: 'docker-build',
           
           sh """
              #!/bin/bash
-             
+
              IMAGE=${registry}/test:${imageTag}
 
              trivy image --severity HIGH,CRITICAL --insecure=true --format json \${IMAGE}
@@ -88,7 +88,7 @@ podTemplate(label: 'docker-build',
               cosign version
               
               IMAGE=${registry}/test:${imageTag}
-              cosign sign --key ${cosign-key} \${IMAGE}
+              cosign sign --key \${cosign-key} \${IMAGE}
              """
         }
       }
