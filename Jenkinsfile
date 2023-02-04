@@ -80,6 +80,21 @@ podTemplate(label: 'docker-build',
       }
     }
 
+    stage('Sign Image') {
+      container(name: 'podman', shell:'/bin/bash') {
+          withCredentials([file(credentialsId: cosign-key, variable: 'cosign-key')]){
+
+            sh """
+             #!/bin/bash
+              cosign version
+              
+              IMAGE=${registry}/test:${imageTag}
+              cosign sign --key ${cosign-key} \${IMAGE}
+             """
+        }
+      }
+    }
+
     stage('Deploy') {
       container('argo') {
         checkout scm
