@@ -3,7 +3,7 @@ def commitMsg = 'CICD-pipeline'
 def githubEmail = '75758585@naver.com'
 def githubKey = 'github-key'
 def githubURL = 'https://github.com/leejunsu249/CICD.git'
-def imageTag = 'blue'
+def imageTag = 'red'
 def registry = '10.60.200.120:5000'
 
 podTemplate(label: 'docker-build',
@@ -71,8 +71,7 @@ podTemplate(label: 'docker-build',
           
           sh """
              #!/bin/bash
-             rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.36.1/trivy_0.36.1_Linux-64bit.rpm
-
+             
              IMAGE=${registry}/test:${imageTag}
 
              trivy image --severity HIGH,CRITICAL --insecure=true --format json \${IMAGE}
