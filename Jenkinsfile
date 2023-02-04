@@ -80,15 +80,17 @@ podTemplate(label: 'docker-build',
     }
 
     stage('Sign Image') {
-      withCredentials([usernamePassword(credentialsId: ssh, usernameVariable: 'SSH_USERNAME', passwordVariable: 'SSH_PASSWORD')]){
-            def remote = [:]
-            remote.name = 'root'
-            remote.host = 'acc-master'
-            remote.user = ${SSH_USERNAME}
-            remote.password = ${SSH_PASSWORD}
-            remote.allowAnyHosts = true
-            
-            sshCommand remote: remote, command: "cosign sign --insecure-skip-verify --allow-insecure-registry  --key k8s://image-sign/cosignkey ${registry}/test:${imageTag}"
+      environment {
+        TARGET_HOST = "root@10.60.200.120"
+      }
+      sshagent (credentials: ['ssh-agent']) {
+                sh """
+                    ssh -o StrictHostKeyChecking=no ${TARGET_HOST}
+                    IMAGE=${registry}/test:${imageTag}
+
+                    "cosign sign --insecure-skip-verify --allow-insecure-registry  --key k8s://image-sign/cosignkey \${IMAGE}
+
+                """
       }
     }
 
