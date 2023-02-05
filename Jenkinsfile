@@ -29,10 +29,14 @@ podTemplate(label: 'docker-build',
 ) 
 {
   node('docker-build') {
-    stage('Checkout') {
+    stage('Checkout container') {
       container('podman') {
         checkout scm
       }
+    }
+
+    stage('Checkout') {
+      checkout scm
     }
 
     stage('Sonar Scanner') {
