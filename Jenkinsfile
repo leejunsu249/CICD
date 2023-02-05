@@ -35,17 +35,32 @@ podTemplate(label: 'docker-build',
       }
     }
 
-    stage('Checkout') {
-      checkout scm
-    }
-
     stage('Sonar Scanner') {
       dir(path: 'container') {
          def scannerHome = tool 'sonar-scanner-server';
          withSonarQubeEnv() {
-         sh "${scannerHome}/bin/sonar-scanner"
+          sh "${scannerHome}/bin/sonar-scanner"
         }
       }
+    }
+
+    stage('SonarQube Quality Gate'){
+       timeout(time: 1, unit: 'MINUTES') {
+          script{
+              echo "Start~~~~"
+              def qg = waitForQualityGate()
+              echo "Status: ${qg.status}"
+              if(qg.status != 'OK') {
+                  echo "NOT OK Status: ${qg.status}"
+                  updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "failed")
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              } else{
+                  echo "OK Status: ${qg.status}"
+                  updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "success")
+              }
+              echo "End~~~~"
+          }
+       }
     }
 
     stage('Podman Build') {
