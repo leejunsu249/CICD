@@ -41,7 +41,7 @@ podTemplate(label: 'docker-build',
 
     stage('Sonar Scanner') {
       dir(path: 'container') {
-         def scannerHome = tool 'SonarScanner';
+         def scannerHome = tool 'sonar-scanner-server';
          withSonarQubeEnv() {
          sh "${scannerHome}/bin/sonar-scanner"
         }
