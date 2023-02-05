@@ -3,7 +3,7 @@ def commitMsg = 'CICD-pipeline'
 def githubEmail = '75758585@naver.com'
 def githubKey = 'github-key'
 def githubURL = 'https://github.com/leejunsu249/CICD.git'
-def imageTag = 'red'
+def imageTag = 'blue'
 def registry = '10.60.200.120:5000'
 def target_host = "root@10.60.200.120"
 
