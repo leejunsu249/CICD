@@ -3,7 +3,7 @@ def commitMsg = 'CICD-pipeline'
 def githubEmail = '75758585@naver.com'
 def githubKey = 'github-key'
 def githubURL = 'https://github.com/leejunsu249/CICD.git'
-def imageTag = 'green'
+def imageTag = 'red'
 def registry = '10.60.200.120:5000'
 def target_host = "root@10.60.200.120"
 
@@ -46,19 +46,19 @@ podTemplate(label: 'docker-build',
 
     stage('SonarQube Quality Gate'){
        timeout(time: 1, unit: 'MINUTES') {
-          script{
-              echo "Start~~~~"
-              def qg = waitForQualityGate()
-              echo "Status: ${qg.status}"
-              if(qg.status != 'OK') {
-                  echo "NOT OK Status: ${qg.status}"
-                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
-              } else{
-                  echo "OK Status: ${qg.status}"
-              }
-              echo "End~~~~"
-          }
-       }
+        script{
+            echo "Start~~~~"
+            def qg = waitForQualityGate()
+            echo "Status: ${qg.status}"
+            if(qg.status != 'OK') {
+                echo "NOT OK Status: ${qg.status}"
+                error "Pipeline aborted due to quality gate failure: ${qg.status}"
+            } else{
+                echo "OK Status: ${qg.status}"
+            }
+            echo "End~~~~"
+        }
+      }
     }
 
     stage('Podman Build') {
