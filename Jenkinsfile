@@ -142,13 +142,13 @@ podTemplate(label: 'docker-build',
 
     stage('Checkout container') {
       container('slack-bot') {
-        withCredentials([usernamePassword(credentialsId: slacktoken, usernameVariable: 'SLACK_BOT_USERNAME', passwordVariable: 'SLACK_BOT_TOKEN'),
-                         usernamePassword(credentialsId: slackid, usernameVariable: 'SLACK_USERNAME', passwordVariable: 'SLACK_ID')]){
+        withCredentials([usernamePassword(credentialsId: slacktoken, usernameVariable: 'SLACK_BOT_USERNAME', passwordVariable: 'TOKEN'),
+                         usernamePassword(credentialsId: slackid, usernameVariable: 'SLACK_USERNAME', passwordVariable: 'ID')]){
         
         sh """
             #!/bin/bash
-            SLACK_BOT_TOKEN = ${SLACK_BOT_TOKEN}
-            SLACK_ID        = ${SLACK_ID}
+            SLACK_BOT_TOKEN = ${TOKEN}
+            SLACK_ID        = ${ID}
             export SLACK_BOT_TOKEN
             export SLACK_ID
 
