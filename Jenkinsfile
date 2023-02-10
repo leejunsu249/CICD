@@ -146,8 +146,8 @@ podTemplate(label: 'docker-build',
                          string(credentialsId: 'SLACK-ID', variable: 'SLACK_ID')]){
         sh """
             #!/bin/bash
-            SLACK_BOT_TOKEN = ${SLACK_BOT_TOKEN}
-            SLACK_ID        = ${SLACK_ID}
+            SLACK_BOT_TOKEN = "$SLACK_BOT_TOKEN"
+            SLACK_ID        = "$SLACK_ID"
 
             go run main.go ${BUILD_URL} ${currentBuild.currentResult} ${env.BUILD_NUMBER} ${JOB_NAME}
            """
