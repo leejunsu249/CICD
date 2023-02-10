@@ -27,7 +27,7 @@ podTemplate(label: 'docker-build',
       image: '10.60.200.120:5000/slack-bot',
       command: 'cat',
       ttyEnabled: true
-    )
+    ),
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/containerd/containerd.sock', hostPath: '/var/run/containerd/containerd.sock'),
