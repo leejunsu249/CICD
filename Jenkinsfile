@@ -150,6 +150,9 @@ podTemplate(label: 'docker-build',
               SLACK_BOT_TOKEN=${TOKEN}
               SLACK_ID=${ID}
 
+              export SLACK_BOT_TOKEN
+              export SLACK_ID
+              
               cd /go/src/app  
               go run main.go ${BUILD_URL} ${currentBuild.currentResult} ${env.BUILD_NUMBER} ${JOB_NAME}
             """
