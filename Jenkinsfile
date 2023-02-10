@@ -22,6 +22,12 @@ podTemplate(label: 'docker-build',
       command: 'cat',
       ttyEnabled: true
     ),
+    containerTemplate(
+      name: 'slack-bot'
+      image: '10.60.200.120:5000/slack-bot',
+      command: 'cat',
+      ttyEnabled: true
+    )
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/containerd/containerd.sock', hostPath: '/var/run/containerd/containerd.sock'),
@@ -130,6 +136,21 @@ podTemplate(label: 'docker-build',
                     git commit -a -m ${commitMsg}
                     git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/leejunsu249/CICD.git HEAD:master
                     """
+        }
+      }
+    }
+
+    stage('Checkout container') {
+      container('slack-bot') {
+        withCredentials([string(credentialsId: 'SLACK_BOT_TOKEN', variable: 'SLACK_BOT_TOKEN'),
+                         string(credentialsId: 'SLACK_ID', variable: 'SLACK_ID')]){
+        sh """
+            #!/bin/bash
+            SLACK_BOT_TOKEN = ${SLACK_BOT_TOKEN}
+            SLACK_ID        = ${SLACK_ID}
+
+            go run main.go ${BUILD_URL} ${currentBuild.currentResult} ${env.BUILD_NUMBER} ${JOB_NAME}
+           """
         }
       }
     }
