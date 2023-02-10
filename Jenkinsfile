@@ -140,19 +140,21 @@ podTemplate(label: 'docker-build',
     //   }
     // }
 
-    stage('Checkout container') {
-      container('slack-bot') {
-        withCredentials([usernamePassword(credentialsId: slacktoken, usernameVariable: 'SLACK_BOT_USERNAME', passwordVariable: 'TOKEN'),
-                         usernamePassword(credentialsId: slackid, usernameVariable: 'SLACK_USERNAME', passwordVariable: 'ID')]){
-        
-        sh """
-            #!/bin/bash
-            SLACK_BOT_TOKEN=${TOKEN}
-            SLACK_ID=${ID}
+    stage('slack alert') {
+      dir(path: '/go/src/app') {
+        container('slack-bot') {
+          withCredentials([usernamePassword(credentialsId: slacktoken, usernameVariable: 'SLACK_BOT_USERNAME', passwordVariable: 'TOKEN'),
+                          usernamePassword(credentialsId: slackid, usernameVariable: 'SLACK_USERNAME', passwordVariable: 'ID')]){
+          
+          sh """
+              #!/bin/bash
+              SLACK_BOT_TOKEN=${TOKEN}
+              SLACK_ID=${ID}
 
 
-            go run main.go ${BUILD_URL} ${currentBuild.currentResult} ${env.BUILD_NUMBER} ${JOB_NAME}
-           """
+              go run main.go ${BUILD_URL} ${currentBuild.currentResult} ${env.BUILD_NUMBER} ${JOB_NAME}
+            """
+          }
         }
       }
     }
