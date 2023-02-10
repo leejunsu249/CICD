@@ -8,7 +8,7 @@ image:
   repository: 10.60.200.120:5000/test
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: green
+  tag: red
 
 
 container:
