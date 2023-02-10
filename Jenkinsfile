@@ -23,7 +23,7 @@ podTemplate(label: 'docker-build',
       ttyEnabled: true
     ),
     containerTemplate(
-      name: 'slack-bot'
+      name: 'slack-bot',
       image: '10.60.200.120:5000/slack-bot',
       command: 'cat',
       ttyEnabled: true
